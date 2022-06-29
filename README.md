@@ -1,12 +1,17 @@
+![Showcaes View - Simform LLC.](https://github.com/SimformSolutionsPvtLtd/flutter_showcaseview/blob/master/preview/banner.png?raw=true)
+
+
 # ShowCaseView
 
-A Flutter package allows you to Showcase/Highlight your widgets step by step.
+[![Build](https://github.com/SimformSolutionsPvtLtd/flutter_showcaseview/workflows/Build/badge.svg?branch=master)](https://github.com/SimformSolutionsPvtLtd/flutter_showcaseview/actions) [![showcaseview](https://img.shields.io/pub/v/showcaseview?label=showcaseview)](https://pub.dev/packages/showcaseview)
 
-It is inspired from [Fluttery's Flutter challange](https://www.youtube.com/watch?v=Xm0ELlBtNWM).
+A Flutter package allows you to Showcase/Highlight your widgets step by step.
 
 ## Preview
 
 ![The example app running in Android](https://github.com/simformsolutions/flutter_showcaseview/blob/master/preview/showcaseview.gif)
+
+
 
 ## Installing
 
@@ -16,7 +21,7 @@ It is inspired from [Fluttery's Flutter challange](https://www.youtube.com/watch
 
 ```dart
 dependencies:
-    showcaseview: ^0.1.5
+    showcaseview: <latest-version>
 ```
 
 2.  Import the package
@@ -61,9 +66,12 @@ Showcase(
   description: 'Click here to go to your Profile',
   disableAnimation: true,
   shapeBorder: CircleBorder(),
+  radius: BorderRadius.all(Radius.circular(40)),
   showArrow: false,
+  overlayPadding: EdgeInsets.all(5),
   slideDuration: Duration(milliseconds: 1500),
   tooltipColor: Colors.blueGrey,
+  blurValue: 2,
   child: ...,
 ),
 ```
@@ -89,7 +97,7 @@ Showcase.withWidget(
 6. Starting the `ShowCase`
 ```dart
 someEvent(){
-    ShowCaseWidget.startShowCase(context, [_one, _two, _three]);
+    ShowCaseWidget.of(context).startShowCase([_one, _two, _three]);
 }
 ```
 
@@ -105,54 +113,105 @@ ShowCaseWidget(
 ),
 ```
 
+8. Go to next `ShowCase`
+```dart
+someEvent(){
+  ShowCaseWidget.of(context).next();
+}
+```
+
+9. Go to previous `ShowCase`
+```dart
+someEvent(){
+  ShowCaseWidget.of(context).previous();
+}
+```
+
 If you want to start the `ShowCaseView` as soon as your UI built up then use below code.
+
 ```dart
 WidgetsBinding.instance.addPostFrameCallback((_) =>
-        ShowCaseWidget.startShowCase(context, [_one, _two, _three]));
+  ShowCaseWidget.of(context).startShowCase([_one, _two, _three])
+);
 ```
-
 
 ## How to use
-Check out the **example** app in the [example](example) directory or the 'Example' tab on pub.dev for a more complete example.
 
+Check out the **example** app in the [example](example) directory or the 'Example' tab on pub.dartlang.org for a more complete example.
 
-## Getting Started
+## Scrolling to active showcase
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Scrolling to active showcase feature will not work properly in scroll views that renders widgets on demand(ex, ListView, GridView).
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+In order to scroll to a widget it needs to be attached with widget tree. So, If you are using a scrollview that renders widgets on demand, it is possible that the widget on which showcase is applied is not attached in widget tree. So, flutter won't be able to scroll to that widget.
 
+So, If you want to make a scroll view that contains less number of children widget then prefer to use SingleChildScrollView.
 
-# License
+If using SingleChildScrollView is not an option, then you can assign a ScrollController to that scrollview and manually scroll to the position where showcase widget gets rendered. You can add that code in onStart method of `ShowCaseWidget`.
 
+Example,
+
+```dart
+// This controller will be assigned to respected sctollview.
+final _controller = ScrollController();
+
+ShowCaseWidget(
+  onStart: (index, key) {
+    if(index == 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+       // If showcase widget is at offset 1000 in the listview.
+       // If you don't know the exact position of the showcase widget,
+       // You can provide nearest possible location.
+       // 
+       // In this case providing 990 instead of 1000 will work as well.
+        _controller.jumpTo(1000);
+      });
+    }
+  },
+);
 ```
-Copyright © 2020, Simform Solutions
-All rights reserved.
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+## Main Contributors
 
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/birjuvachhani"><img src="https://avatars.githubusercontent.com/u/20423471?s=100" width="100px;" alt=""/><br /><sub><b>Birju Vachhani</b></sub></a></td>
+    <td align="center"><a href="https://github.com/DevarshRanpara"><img src="https://avatars.githubusercontent.com/u/26064415?s=100" width="100px;" alt=""/><br /><sub><b>Devarsh Ranpara</b></sub></a></td>
+    <td align="center"><a href="https://github.com/AnkitPanchal10"><img src="https://avatars.githubusercontent.com/u/38405884?s=100" width="100px;" alt=""/><br /><sub><b>Ankit Panchal</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Kashifalaliwala"><img src="https://avatars.githubusercontent.com/u/30998350?s=100" width="100px;" alt=""/><br /><sub><b>Kashifa Laliwala</b></sub></a></td>
+     <td align="center"><a href="https://github.com/vatsaltanna"><img src="https://avatars.githubusercontent.com/u/25323183?s=100" width="100px;" alt=""/><br /><sub><b>Vatsal Tanna</b></sub></a></td>
+     <td align="center"><a href="https://github.com/sanket-simform"><img src="https://avatars.githubusercontent.com/u/65167856?v=4" width="100px;" alt=""/><br /><sub><b>Sanket Kachhela</b></sub></a></td>
+     <td align="center"><a href="https://github.com/ParthBaraiya"><img src="https://avatars.githubusercontent.com/u/36261739?v=4" width="100px;" alt=""/><br /><sub><b>Parth Baraiya</b></sub></a></td>
+          <td align="center"><a href="https://github.com/ShwetaChauhan18"><img src="https://avatars.githubusercontent.com/u/34509457" width="80px;" alt=""/><br /><sub><b>Shweta Chauhan</b></sub></a></td>
+  </tr>
+</table>
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+## Note
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+We have updated license of flutter_showcaseview from BSD 2-Clause "Simplified" to MIT.
 
+## License
+
+```text
+MIT License
+
+Copyright (c) 2021 Simform Solutions
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```

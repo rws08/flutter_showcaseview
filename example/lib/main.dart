@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
+
 import 'detailscreen.dart';
 
 void main() => runApp(MyApp());
@@ -32,7 +33,6 @@ class _MailPageState extends State<MailPage> {
   GlobalKey _three = GlobalKey();
   GlobalKey _four = GlobalKey();
   GlobalKey _five = GlobalKey();
-  GlobalKey _six = GlobalKey();
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _MailPageState extends State<MailPage> {
     //Start showcase view after current widget frames are drawn.
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         ShowCaseWidget.of(context)
-            .startShowCase([_one, _two, _three, _four, _five, _six]));
+            .startShowCase([_one, _two, _three, _four, _five]));
   }
 
   @override
@@ -194,6 +194,14 @@ class _MailPageState extends State<MailPage> {
                                     )
                                   ],
                                 ),
+                                containerBuilder:
+                                    (context, bound, offset, container) {
+                                  return Positioned(
+                                    left: bound.left + 80,
+                                    top: bound.top - 30,
+                                    child: container,
+                                  );
+                                },
                                 child: Container(
                                   margin: const EdgeInsets.all(10),
                                   child: Container(
@@ -259,30 +267,13 @@ class _MailPageState extends State<MailPage> {
                 ),
               ),
             ),
-            Showcase.withWidget(
-              key: _six,
-              height: 50,
-              width: 140,
-              shapeBorder: CircleBorder(),
-              container: Text(
-                'Medium mail contents',
-                style: TextStyle(color: Colors.white),
-              ),
-              containerBuilder: (context, bound, offset, container) {
-                return Positioned(
-                  left: bound.left + 80,
-                  top: bound.top - 30,
-                  child: container,
-                );
-              },
-              child: MailTile(
-                Mail(
-                  sender: 'Medium',
-                  sub: 'Showcase View',
-                  msg: 'Check new showcase View',
-                  date: '25 May',
-                  isUnread: false,
-                ),
+            MailTile(
+              Mail(
+                sender: 'Medium',
+                sub: 'Showcase View',
+                msg: 'Check new showcase View',
+                date: '25 May',
+                isUnread: false,
               ),
             ),
             MailTile(
@@ -332,7 +323,7 @@ class _MailPageState extends State<MailPage> {
           onPressed: () {
             setState(() {
               ShowCaseWidget.of(context)
-                  .startShowCase([_one, _two, _three, _four, _five, _six]);
+                  .startShowCase([_one, _two, _three, _four, _five]);
             });
           },
           child: Icon(
@@ -353,11 +344,11 @@ class Mail {
   bool isUnread;
 
   Mail({
-    this.sender,
-    this.sub,
-    this.msg,
-    this.date,
-    this.isUnread,
+    required this.sender,
+    required this.sub,
+    required this.msg,
+    required this.date,
+    required this.isUnread,
   });
 }
 
